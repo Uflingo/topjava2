@@ -6,8 +6,9 @@
 </head>
 <body>
 <h3><a href="index.html">Home</a></h3>
+<c:forEach items="${MealList}" var="meal" />
 <h2>
-    <c:out value="${k}" />
+    <c:out value="${meal.getDescription()}"></c:out>
  </h2>
 </body>
 </html>
