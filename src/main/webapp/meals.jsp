@@ -22,7 +22,7 @@
                 bgcolor="green">
             </c:otherwise>
         </c:choose>>
-        <td>${f:formatLocalDateTime('${meal.getDateTime()}', "dd.MM.yyyy")}</td>
+        <td>${f:formatLocalDateTime(meal.getDateTime(), "dd.MM.yyyy")}</td>
         <td>"${meal.getDescription()}"</td>
         <td>"${meal.getCalories()}"</td>
         </tr>
