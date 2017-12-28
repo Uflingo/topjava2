@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.repository.mock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import ru.javawebinar.topjava.model.NamedEntity;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
@@ -20,10 +21,8 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     @Override
     public boolean delete(int id) {
         log.info("delete {}", id);
-        if (repository.containsKey(id)) {
-            repository.remove(id);
+        if (repository.remove(id) != null)
             return true;
-        }
         return false;
     }
 
@@ -46,7 +45,15 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     public List<User> getAll() {
         log.info("getAll");
         List<User> users = new ArrayList<>(repository.values());
-        Collections.sort(users, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        Collections.sort(users, new Comparator<User>() {
+            @Override
+            public int compare(User o1, User o2) {
+                int namesDiff = o1.getName().compareTo(o2.getName());
+                if (namesDiff != 0)
+                    return namesDiff;
+                return o1.getId() - o2.getId();
+            }
+        });
         return users;
     }
 
