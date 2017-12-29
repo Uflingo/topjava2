@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.MealService;
@@ -22,16 +23,15 @@ public class MealRestController {
     private UserService userService;
 
     public Meal save(Meal meal){
-//        MealWithExceed mealWithExceed = get(meal.getId(), meal.getUserId());
-        service.save(meal);
+        service.save(meal, AuthorizedUser.id());
         return meal;
     }
 
-    public void delete(int id, int userId){
-        service.delete(id,userId);
+    public void delete(int id){
+        service.delete(id,AuthorizedUser.id());
     }
 
-    public Meal get(int id, int userId){
+    public Meal get(int id){
 //        User user = userService.get(userId);
 //        Meal meal = service.get(id, userId);
 //        int calsThisDay = service.getAll(userId)
@@ -41,12 +41,12 @@ public class MealRestController {
 //                .sum();
 //        MealWithExceed mealWithExceed = MealsUtil.createWithExceed(meal, (calsThisDay+meal.getCalories()) > user.getCaloriesPerDay());
 //        return mealWithExceed;
-        return service.get(id, userId);
+        return service.get(id, AuthorizedUser.id());
     }
 
-    public Collection<MealWithExceed> getAll(int userId){
-        User user = userService.get(userId);
-        return MealsUtil.getFilteredWithExceeded(service.getAll(userId), LocalTime.MIN, LocalTime.MAX,user.getCaloriesPerDay());
+    public Collection<MealWithExceed> getAll(){
+        User user = userService.get(AuthorizedUser.id());
+        return MealsUtil.getFilteredWithExceeded(service.getAll(AuthorizedUser.id()), LocalTime.MIN, LocalTime.MAX,user.getCaloriesPerDay());
     }
 
 }

@@ -18,15 +18,24 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(this::save);
+        MealsUtil.MEALS.forEach(m ->save(m, 1));
     }
 
     @Override
-    public Meal save(Meal meal) {
+    public Meal save(Meal meal, int userId) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
         }
-        repository.put(meal.getId(), meal);
+        if (meal.getUserId() != 0) {
+            if (meal.getUserId() == userId)
+                repository.put(meal.getId(), meal);
+            else
+                return null;
+        }
+        else{
+            meal.setUserId(userId);
+            repository.put(meal.getId(), meal);
+        }
         return meal;
     }
 
