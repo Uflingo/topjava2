@@ -9,7 +9,10 @@ public class MealTestData {
 
     public static final BeanMatcher<Meal> MATCHER = new BeanMatcher<>(
             ((expected, actual) -> expected == actual ||
-                    (Objects.equals(expected, actual)))
+//                    (Objects.equals(expected, actual)) ||
+                    ((Objects.equals(expected.getCalories(), actual.getCalories()) &&
+                    Objects.equals(expected.getDateTime(), actual.getDateTime()) &&
+                    Objects.equals(expected.getDescription(), actual.getDescription()))))
     );
 
 }
