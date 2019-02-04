@@ -1,7 +1,11 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.junit.runners.model.Statement;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,6 +30,34 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
+    private static StringBuilder resultTimeLog = new StringBuilder("Result time log \n");
+
+    @Rule
+    public final TestRule watcher = new TestWatcher() {
+        private long startTime;
+
+        @Override
+        protected void starting(Description description) {
+            startTime = System.currentTimeMillis();
+        }
+
+        @Override
+        protected void finished(Description description) {
+            long resultTime = System.currentTimeMillis() - startTime;
+            System.out.println("Time of execution " + resultTime + "ms");
+            resultTimeLog.append(description.getMethodName())
+                    .append(" execution time: ")
+                    .append(resultTime)
+                    .append("ms")
+                    .append("\n");
+        }
+    };
+
+    @AfterClass
+    public static void after() {
+        System.out.println(resultTimeLog.toString());
+    }
+
 
     static {
         SLF4JBridgeHandler.install();
