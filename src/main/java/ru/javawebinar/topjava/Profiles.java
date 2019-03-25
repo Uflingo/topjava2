@@ -26,4 +26,18 @@ public class Profiles {
             }
         }
     }
+
+    public static String getActiveDataProfile() {
+        try{
+            Class.forName("org.springframework.data.jpa.repository.JpaRepository");
+            return DATAJPA;
+        } catch (ClassNotFoundException ex) {
+            try {
+                Class.forName("javax.persistence.EntityManager");
+                return JPA;
+            } catch (ClassNotFoundException e) {
+                return JDBC;
+            }
+        }
+    }
 }
